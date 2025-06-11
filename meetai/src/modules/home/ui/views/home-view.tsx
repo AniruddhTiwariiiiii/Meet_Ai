@@ -25,7 +25,7 @@ export const HomeView = () => {
       <p>Logged in as {session.user.name}</p>
       <Button onClick={() => authClient.signOut(
         { fetchOptions: { onSuccess: () => router.push("/sign-in")}}
-      )}>Sign out
+      )} className="w-full">Sign out
 
       </Button>
     </div>
