@@ -44,7 +44,11 @@ export function DataTable<TData, TValue>({
                 className="cursor-pointer"
               >
                 {row.getVisibleCells().map((cell) => (
-                  <TableCell key={cell.id} className="text-sm p-4">
+                  <TableCell
+                  key={cell.id}
+                  className="text-sm p-4 max-w-xs overflow-hidden text-ellipsis whitespace-nowrap"
+                >
+                
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </TableCell>
                 ))}
