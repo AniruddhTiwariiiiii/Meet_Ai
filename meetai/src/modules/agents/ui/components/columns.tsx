@@ -41,7 +41,7 @@ export const columns: ColumnDef<AgentGetOne>[] = [
         className="flex items-center gap-x-2 [&>svg]:size-4"
         >
             <VideoIcon className="text-purple-500"/>
-            {row.original.meetingsCount} {row.original.meetingsCount == 1 ? "meeting" : "meetings"}
+            {row.original.meetingCount} {row.original.meetingCount == 1 ? "meeting" : "meetings"}
         </Badge>
     )
   }
