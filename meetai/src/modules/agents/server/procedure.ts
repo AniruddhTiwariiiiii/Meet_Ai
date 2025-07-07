@@ -3,12 +3,59 @@ import { db } from "@/db";
 import { eq, getTableColumns } from "drizzle-orm";
 import { z } from "zod";
 import { agents } from "@/db/schema";
-import { agentInsertSchema } from "../schemas";
+import { agentInsertSchema, agentsUpdateSchema } from "../schemas";
 import { and, count, desc, ilike, sql } from "drizzle-orm/sql";
 import { DEFAULT_PAGE, DEFAULT_PAGE_SIZE, MAX_PAGE_SIZE, MIN_PAGE_SIZE } from "@/constants";
 import { TRPCError } from "@trpc/server";
 
 export const agentsRouter = createTRPCRouter({
+  update: protectedProcedure
+    .input(agentsUpdateSchema)
+    .mutation(async ({ ctx, input }) => {
+      const [updatedAgent] = await db
+        .update(agents)
+        .set(input)
+        .where(
+          and(
+            eq(agents.id, input.id),
+            eq(agents.userId, ctx.auth.user.id)
+          )
+        )
+
+        .returning();
+
+        if(!updatedAgent){
+          throw new TRPCError({
+            code: "NOT_FOUND",
+            message: "Agent not found"
+          });
+        }
+
+        return updatedAgent;
+
+    }),
+  remove: protectedProcedure
+    .input(z.object({ id : z.string() }))
+    .mutation(async ({ ctx, input}) => {
+      const [removeAgent] = await db 
+        .delete(agents)
+        .where(
+          and(
+            eq(agents.id, input.id),
+            eq(agents.userId, ctx.auth.user.id)
+          ),
+        )
+        .returning();
+
+        if(!removeAgent){
+          throw new TRPCError({
+            code: "NOT_FOUND",
+            message: "Agent not found"
+          });
+        }
+
+        return removeAgent;
+    }),
   // Get all agents
   getMany: protectedProcedure
         .input(z.object({
@@ -60,29 +107,31 @@ export const agentsRouter = createTRPCRouter({
         };
     }),
 
-  // Get a single agent by ID
-  getOne: protectedProcedure
+  
+    getOne: protectedProcedure
     .input(z.object({ id: z.string() }))
     .query(async ({ input, ctx }) => {
       const [existingAgent] = await db
         .select({
-            meetingCount: sql<number>`5`,
-            ...getTableColumns(agents),
-        })
+          meetingCount: sql<number>`5`, // fake count for now
+          ...getTableColumns(agents),
+        } as const) // <- 🔥 this is required for type inference
         .from(agents)
         .where(
           and(
             eq(agents.id, input.id),
             eq(agents.userId, ctx.auth.user.id)
           )
-        ); 
-
-        if(!existingAgent){
-          throw new TRPCError({ code: "NOT_FOUND", message:"Agent not found"})
-        }
-
+        );
+  
+      if (!existingAgent) {
+        throw new TRPCError({ code: "NOT_FOUND", message: "Agent not found" });
+      }
+  
       return existingAgent;
     }),
+  
+
 
   // Create a new agent
   create: protectedProcedure
