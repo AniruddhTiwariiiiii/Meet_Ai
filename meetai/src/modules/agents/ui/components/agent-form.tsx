@@ -119,7 +119,7 @@ export const AgentForm = ({
                         <FormItem>
                             <FormLabel>Name</FormLabel>
                             <FormControl>
-                                <Input {...field} placeholder="e.g. Romulus"/>
+                                <Input {...field} placeholder="e.g. Chanakya"/>
                             </FormControl>
                             <FormMessage />
                         </FormItem>
@@ -132,7 +132,8 @@ export const AgentForm = ({
                         <FormItem>
                             <FormLabel>Instructions</FormLabel>
                             <FormControl>
-                                <Textarea {...field} placeholder="You are the king of India"/>
+                                <Textarea {...field} placeholder="You are the greatest strategist of all times."
+                                />
                             </FormControl>
                             <FormMessage />
                         </FormItem>
