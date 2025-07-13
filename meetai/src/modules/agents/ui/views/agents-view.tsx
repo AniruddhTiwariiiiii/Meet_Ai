@@ -6,7 +6,7 @@ import { useTRPC } from "@/trpc/client";
 import { LoadingState } from "@/components/ui/loading-state";
 
 import { ErrorState } from "@/components/ui/error-state";
-import { DataTable } from "../components/data-table";
+import { DataTable } from "@/components/ui/data-table";
 import { columns } from "../components/columns";
 import { EmptyState } from "@/components/ui/empty-state";
 import { userAgentFilters } from "../../hooks/use-agents-filter";
