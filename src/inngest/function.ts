@@ -50,7 +50,7 @@ export const meetingsProcessing = inngest.createFunction(
     const transcript = await step.run("parse-transcript", async () => {
       // return JSONL.parse<StreamTranscriptItem>(response);
       const text = await response.text();
-      return JSON.parse<StreamTranscriptItem>(text);
+      return JSON.parse(text) as StreamTranscriptItem[];
     });
 
     const trascriptWithSpeakers = await step.run("add-speakers", async () => {
